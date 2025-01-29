@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-  baseURL: "http://localhost/task_php/routes/api.php", 
+  baseURL: "http://localhost/backend_php_task/routes/api.php", 
 })
 
 const token = localStorage.getItem("token")
