@@ -13,7 +13,6 @@ const isProcessing = ref(false)
 
 
 const submitForm = () => {
-  errors.value = {}
   
   if (!email.value) {
     errors.value.email = "Email is required!"
@@ -48,6 +47,11 @@ const submitForm = () => {
     })
 }
 
+const clearError = (field) => {
+  errors.value?.[field] ? (errors.value[field]  = "") : ""
+  errors.value.error = ""
+}
+
 </script>
 
 <template>
@@ -62,7 +66,8 @@ const submitForm = () => {
             v-model="email"
             type="email"
             placeholder="Enter your email"
-            :error="errors.email" 
+            :error="errors.email"
+            @update:modelValue="clearError('email')" 
           />
         </div>
 
@@ -71,7 +76,8 @@ const submitForm = () => {
             v-model="password"
             type="password"
             placeholder="Enter your password"
-            :error="errors.password" 
+            :error="errors.password"
+            @update:modelValue="clearError('password')" 
           />
         </div>
 

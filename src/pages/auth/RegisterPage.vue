@@ -13,7 +13,6 @@ const errors = ref({})
 const isProcessing = ref(false)
 
 const submitForm = () => {
-  errors.value = {}
 
   if (!email.value) {
     errors.value.email = "Email is required!"
@@ -43,6 +42,11 @@ const submitForm = () => {
       }
     })
 }
+
+const clearError = (field) => {
+  errors.value?.[field] ? (errors.value[field]  = "") : ""
+}
+
 </script>
 
 <template>
@@ -56,7 +60,8 @@ const submitForm = () => {
             v-model="email"
             type="email"
             placeholder="Enter your email"
-            :error="errors.email" 
+            :error="errors.email"
+            @update:modelValue="clearError('email')" 
           />
         </div>
 
@@ -65,7 +70,8 @@ const submitForm = () => {
             v-model="password"
             type="password"
             placeholder="Enter your password"
-            :error="errors.password" 
+            :error="errors.password"
+            @update:modelValue="clearError('password')" 
           />
         </div>
 
@@ -74,7 +80,8 @@ const submitForm = () => {
             v-model="confirmPassword"
             type="password"
             placeholder="Enter your password"
-            :error="errors.confirmPassword" 
+            :error="errors.confirmPassword"
+            @update:modelValue="clearError('confirmPassword')"
           />
         </div>
 
@@ -87,9 +94,10 @@ const submitForm = () => {
         </button>
         <button
           class="btn btn-secondary w-100"
+          :disabled="isProcessing"
           @click="router.push('/login')"
         >
-          <span>Back to Login</span>
+          <span>{{ isProcessing ? "Processing..." : "Back to Login" }}</span>
         </button>
       </form>
     </div>

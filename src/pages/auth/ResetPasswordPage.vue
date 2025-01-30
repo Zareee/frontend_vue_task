@@ -17,8 +17,6 @@ const isProcessing = ref(false)
 
 const submitForm = () => {
 
-  errors.value = {}
-
   if (!newPassword.value) {
     errors.value.newPassword = "Passwords is required!"
     return
@@ -50,6 +48,10 @@ const submitForm = () => {
     })
 }
 
+const clearError = (field) => {
+  errors.value?.[field] ? (errors.value[field]  = "") : ""
+}
+
 </script>
 
 <template>
@@ -63,7 +65,8 @@ const submitForm = () => {
             v-model="newPassword"
             type="password"
             placeholder="Enter your new password"
-            :error="errors.newPassword" 
+            :error="errors.newPassword"
+            @update:modelValue="clearError('newPassword')" 
           />
         </div>
         <div class="mb-5">
@@ -71,7 +74,8 @@ const submitForm = () => {
             v-model="confirmPassword"
             type="password"
             placeholder="Enter your new password"
-            :error="errors.confirmPassword" 
+            :error="errors.confirmPassword"
+            @update:modelValue="clearError('confirmPassword')" 
           />
         </div>
 

@@ -11,7 +11,6 @@ const errors = ref({})
 const isProcessing = ref(false)
 
 const submitForm = () => {
-  errors.value = {}
 
   if (!email.value) {
     errors.value.email = "Email is required!"
@@ -34,6 +33,11 @@ const submitForm = () => {
       console.log("There was an error fetching the data:", error)
     })
 }
+
+const clearError = (field) => {
+  errors.value?.[field] ? (errors.value[field]  = "") : ""
+}
+
 </script>
 
 <template>
@@ -47,7 +51,8 @@ const submitForm = () => {
             v-model="email"
             type="email"
             placeholder="Enter your email"
-            :error="errors.email" 
+            :error="errors.email"
+            @update:modelValue="clearError('email')" 
           />
         </div>
 
