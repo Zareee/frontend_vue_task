@@ -8,13 +8,17 @@ const router = useRouter()
 
 const email = ref(null)
 const errors = ref({})
+const isProcessing = ref(false)
 
 const submitForm = () => {
   errors.value = {}
+
   if (!email.value) {
     errors.value.email = "Email is required!"
     return
   }
+  isProcessing.value = true
+
   api.post("/send-link", {
       email: email.value,
     })
@@ -23,8 +27,10 @@ const submitForm = () => {
         alert("Link sent to email successful")
         router.push("/login")
       }
+      isProcessing.value = false
     })
     .catch((error) => {
+      isProcessing.value = false
       console.log("There was an error fetching the data:", error)
     })
 }
@@ -48,15 +54,17 @@ const submitForm = () => {
         <button
           type="submit"
           class="btn btn-warning w-100 mb-3"
+          :disabled="isProcessing"
         >
-          <span>Send Email</span>
+          <span>{{ isProcessing ? "Processing..." : "Send Email" }}</span>
         </button>
       </form>
       <button
         class="btn btn-secondary w-100 mb-3"
+        :disabled="isProcessing"
         @click="router.push('/login')"
       >
-        <span>Back to Login</span>
+        <span>{{ isProcessing ? "Processing..." : "Back to Login" }}</span>
       </button>
     </div>
   </div>

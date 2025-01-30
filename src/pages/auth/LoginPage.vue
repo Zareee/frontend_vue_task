@@ -9,6 +9,7 @@ const router = useRouter()
 const email = ref(null)
 const password = ref(null)
 const errors = ref({})
+const isProcessing = ref(false)
 
 
 const submitForm = () => {
@@ -22,6 +23,7 @@ const submitForm = () => {
     errors.value.password = "Passwords is required!"
     return
   }
+  isProcessing.value = true
 
   api.post("/login", {
       email: email.value,
@@ -35,8 +37,10 @@ const submitForm = () => {
         api.defaults.headers.common["Authorization"] = `Bearer ${token}`
         router.push("/")
       }
+      isProcessing.value = false
     })
     .catch((error) => {
+      isProcessing.value = false
       if(error.response.data.message) {
         errors.value.error = error.response.data.message
       }
@@ -74,21 +78,24 @@ const submitForm = () => {
         <button
           type="submit"
           class="btn btn-warning w-100 mb-3 "
+          :disabled="isProcessing"
         >
-          <span >Login</span>
+          <span >{{ isProcessing ? "Processing..." : "Login" }}</span>
         </button>
 
       </form>
 
       <button
         class="btn btn-secondary w-100 mb-3"
+        :disabled="isProcessing"
         @click="router.push('/register')"
       >
-        <span>Register</span>
+        <span>{{ isProcessing ? "Processing..." : "Register" }}</span>
       </button>
 
       <button
         class="btn btn-link text-white w-100 mb-3"
+        :disabled="isProcessing"
         @click="router.push('/forgot-password')"
       >
         <span>Forgot Password?</span>

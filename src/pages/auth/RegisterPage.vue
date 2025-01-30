@@ -10,6 +10,7 @@ const email = ref(null)
 const password = ref(null)
 const confirmPassword = ref(null)
 const errors = ref({})
+const isProcessing = ref(false)
 
 const submitForm = () => {
   errors.value = {}
@@ -26,6 +27,7 @@ const submitForm = () => {
     errors.value.confirmPassword = "Passwords do not match!"
     return
   }
+  isProcessing.value = true
 
   api.post("/register", {
       email: email.value,
@@ -35,6 +37,7 @@ const submitForm = () => {
       router.push("/login")
     })
     .catch((error) => {
+      isProcessing.value = false
       if (error.response && error.response.data && error.response.data.input) {
         errors.value[error.response.data.input] = error.response.data.message
       }
@@ -78,8 +81,9 @@ const submitForm = () => {
         <button
           type="submit"
           class="btn btn-warning w-100 mb-3"
+          :disabled="isProcessing"
         >
-          <span>Register</span>
+          <span>{{ isProcessing ? "Processing..." : "Register" }}</span>
         </button>
         <button
           class="btn btn-secondary w-100"

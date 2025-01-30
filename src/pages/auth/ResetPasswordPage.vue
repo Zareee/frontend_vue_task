@@ -12,6 +12,7 @@ const email = ref(route.query.email)
 const newPassword = ref(null)
 const confirmPassword = ref(null)
 const errors = ref({})
+const isProcessing = ref(false)
 
 
 const submitForm = () => {
@@ -31,6 +32,8 @@ const submitForm = () => {
     return
   }
 
+  isProcessing.value = true
+
   api.post("/reset-password", {
       token: token.value,
       email: email.value,
@@ -46,6 +49,7 @@ const submitForm = () => {
       console.log("There was an error fetching the data:", error)
     })
 }
+
 </script>
 
 <template>
@@ -74,15 +78,17 @@ const submitForm = () => {
         <button
           type="submit"
           class="btn btn-warning w-100 mb-3"
+          :disabled="isProcessing"
         >
-          <span>Reset Password</span>
+          <span>{{ isProcessing ? "Processing..." : "Reset Password" }}</span>
         </button>
       </form>
       <button
         class="btn btn-secondary w-100 mb-3"
+        :disabled="isProcessing"
         @click="router.push('/login')"
       >
-        <span>Back to Login</span>
+        <span>{{ isProcessing ? "Processing..." : "Back to Login" }}</span>
       </button>
     </div>
   </div>
